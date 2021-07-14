@@ -1,5 +1,6 @@
 'use strict';
-//HW_2
+
+/* //HW_2
 //Task 1
 console.log('Task 1');
 var a = 1,
@@ -133,7 +134,7 @@ const power = (val, pow) => {
 	if (pow === 1) return val;
 	return val * power(val, pow - 1);
 };
-console.log('3**3 = ' + power(3, 3));
+console.log('3**3 = ' + power(3, 3)); */
 
 /*
 // HW_1

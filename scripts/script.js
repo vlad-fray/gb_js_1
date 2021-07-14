@@ -1,4 +1,42 @@
 'use strict';
+//HW_3
+//Task_1
+let i = 2;
+const primeNums = [];
+while (i <= 100) {
+	let sumOfDiv = 0;
+	let k = i - 1;
+	while (k > 1) {
+		if (i % k === 0) sumOfDiv++;
+		k--;
+	}
+	if (sumOfDiv === 0) primeNums.push(i);
+	i++;
+}
+console.log('Task 1', primeNums);
+
+//Task_2-3
+const goodsBasket = [
+	{ type: 'Boots', brand: 'Ricco', price: 3000 },
+	{ type: 'Boots', brand: 'Nike', price: 6000 },
+	{ type: 'Boots', brand: 'Adidas', price: 5600 },
+];
+
+const countBasketPrice = (goods) => {
+	return goods.reduce((acc, good) => acc + good.price, 0);
+};
+
+console.log('Task 2-3', countBasketPrice(goodsBasket));
+
+//Task_4
+console.log('Task 4');
+for (let i = 0; i <= 9; console.log(i), i++) {}
+
+//Task_5
+console.log('Task 5');
+for (let i = 1; i <= 20; i++) {
+	console.log(''.padStart(i, 'x'));
+}
 
 /* //HW_2
 //Task 1

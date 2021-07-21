@@ -1,7 +1,7 @@
 'use strict';
 //HW_5
 //Task_1
-const body = document.querySelector('body');
+const chess = document.querySelector('#chess');
 
 const createChessBoard = function () {
 	const chessContainer = document.createElement('div');
@@ -14,7 +14,7 @@ const createChessBoard = function () {
 		minHeight: '100px',
 		content: '',
 	});
-	body.appendChild(chessContainer);
+	chess.appendChild(chessContainer);
 
 	const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 	for (let row = 0; row < 9; row++) {

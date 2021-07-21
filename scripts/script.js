@@ -21,20 +21,18 @@ nums.forEach((num) => {
 });
 
 //Task 2
-const goodsBasket = [
-	{ type: 'Boots', brand: 'Ricco', price: 3000 },
-	{ type: 'Boots', brand: 'Nike', price: 6000 },
-	{ type: 'Boots', brand: 'Adidas', price: 5600 },
-];
-
-const countBasketPrice = (goods) => {
-	return goods.reduce((acc, good) => acc + good.price, 0);
+const cart = {
+	goods: [
+		{ type: 'Boots', brand: 'Ricco', price: 3000 },
+		{ type: 'Boots', brand: 'Nike', price: 6000 },
+		{ type: 'Boots', brand: 'Adidas', price: 5600 },
+	],
+	totalPrice() {
+		return this.goods.reduce((acc, good) => acc + good.price, 0);
+	},
 };
 
-console.log(
-	'Task 2, full price of busket: ',
-	countBasketPrice(goodsBasket)
-);
+console.log('Task 2, full price of busket: ', cart.totalPrice());
 
 //Task 3
 console.log('Taks 3');

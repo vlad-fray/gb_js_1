@@ -1,5 +1,80 @@
 'use strict';
-//HW_3
+//HW_4
+//Task 1
+console.log('Task 1');
+const nums = [13, -5, 5.4, 0, 500, 1015, 999];
+const createNumObj = function (num) {
+	if (!Number.isFinite(num) || num < 0 || num > 999) {
+		console.log(`${num} не входит в искомую область [0, 999]`);
+		return {};
+	}
+	const int = Math.floor(num);
+	return {
+		единицы: int % 10,
+		десятки: Math.floor((int % 100) / 10),
+		сотни: Math.floor((int % 1000) / 100),
+	};
+};
+
+nums.forEach((num) => {
+	console.log(`${num}: `, createNumObj(num));
+});
+
+//Task 2
+const cart = {
+	goods: [
+		{ type: 'Boots', brand: 'Ricco', price: 3000 },
+		{ type: 'Boots', brand: 'Nike', price: 6000 },
+		{ type: 'Boots', brand: 'Adidas', price: 5600 },
+	],
+	totalPrice() {
+		return this.goods.reduce((acc, good) => acc + good.price, 0);
+	},
+};
+
+console.log('Task 2, full price of busket: ', cart.totalPrice());
+
+//Task 3
+console.log('Taks 3');
+class Good {
+	#type;
+	#brand;
+	#price;
+	constructor(type = null, brand = null, price = null) {
+		this.#type = type;
+		this.#brand = brand;
+		this.#price = price;
+	}
+	get goodInfo() {
+		return {
+			type: this.#type,
+			brand: this.#brand,
+			price: this.#price,
+		};
+	}
+}
+
+const standartGood = new Good('Shoes', 'Ricco', 3000);
+console.log('Good', standartGood.goodInfo);
+
+class CatalogGood extends Good {
+	#discount = null;
+	constructor(type, brand, price, discount) {
+		super(type, brand, price);
+		this.#discount = discount;
+	}
+	checkDiscount() {
+		return this.#discount;
+	}
+}
+const catalogGood = new CatalogGood('Shoes', 'Ricco', 3000, 10);
+console.log(
+	'Catalog Good',
+	standartGood.goodInfo,
+	`with ${catalogGood.checkDiscount()}% discount`
+);
+
+/* //HW_3
 //Task_1
 let i = 2;
 const primeNums = [];
@@ -36,7 +111,7 @@ for (let i = 0; i <= 9; console.log(i), i++) {}
 console.log('Task 5');
 for (let i = 1; i <= 20; i++) {
 	console.log(''.padStart(i, 'x'));
-}
+} */
 
 /* //HW_2
 //Task 1

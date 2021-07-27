@@ -1,49 +1,142 @@
 'use strict';
 //HW_6
 //Task_1
-const catalogContainer = document.querySelector('.catalog');
-const cartContainer = document.querySelector('.cart');
 
-const catalog = {
+// Model ////////////////////////////////
+const state = {
 	goods: [
-		{ type: 'Boots', brand: 'Ricco', price: 3000 },
-		{ type: 'Boots', brand: 'Nike', price: 6000 },
-		{ type: 'Boots', brand: 'Adidas', price: 5600 },
+		{ type: 'Boots', brand: 'Ricco', price: 3000, id: 0 },
+		{ type: 'Boots', brand: 'Nike', price: 6000, id: 1 },
+		{ type: 'Boots', brand: 'Adidas', price: 5600, id: 2 },
 	],
-	fillCatalog(parentEl) {
-		const html = this.goods
+	cartGoodsId: [],
+};
+
+// Controller ////////////////////////////
+
+const addProductToCart = function (goodId) {
+	// Add marked goodId to state
+	state.cartGoodsId.push(goodId);
+
+	// Add new cart element to DOM
+	cartView.addCartElement(state.goods, goodId);
+
+	// Update cart price
+	cartView.updateTotalPrice(state.goods, state.cartGoodsId);
+};
+
+const removeProductFromCart = function (goodId) {
+	// Remove marked goodId from cart
+	state.cartGoodsId = state.cartGoodsId.filter((id) => id !== goodId);
+
+	// Update cart price
+	cartView.updateTotalPrice(state.goods, state.cartGoodsId);
+
+	// Return addToCart button to catalog item
+	catalogView.returnButton(goodId);
+};
+
+// Views ////////////////////////////////////
+
+const catalogView = {
+	_parentEl: document.querySelector('.catalog'),
+
+	fillCatalog(goods) {
+		const markup = goods
 			.map(
 				(good) =>
-					`<p class="catalog__item">Тип: ${good.type}, 
+					`<p class="catalog__item" data-id="${good.id}">Тип: ${good.type}, 
 				брэнд: ${good.brand}, 
 				цена: ${good.price} руб.
 				<button class="catalog__button">Добавить в корзину</button></p>
 				`
 			)
 			.join('');
-		parentEl.insertAdjacentHTML('beforeend', html);
+		this._parentEl.insertAdjacentHTML('beforeend', markup);
+	},
+	addProductToCartHadler(handler) {
+		this._parentEl.addEventListener('click', function (e) {
+			e.preventDefault();
+			const good = e.target.closest('.catalog__item');
+			const btn = e.target.closest('.catalog__button');
+			if (!btn) return;
+
+			const { id } = good.dataset;
+			good.removeChild(btn);
+
+			handler(+id);
+		});
+	},
+	returnButton(goodId) {
+		const items = Array.from(
+			this._parentEl.querySelectorAll('.catalog__item')
+		);
+
+		const [item] = items.filter((el) => {
+			return +el.getAttribute('data-id') === goodId;
+		});
+		const markup = `
+		<button class="catalog__button">
+			Добавить в корзину
+		</button>
+		`;
+		item.insertAdjacentHTML('beforeend', markup);
 	},
 };
 
-const cart = {
-	goods: [],
+const cartView = {
+	_parentEl: document.querySelector('.cart__goods'),
+	_priceEl: document.querySelector('.cart__goods-price'),
 	totalPrice() {
-		return this.goods.reduce((acc, good) => acc + good.price, 0);
+		return this._goods.reduce((acc, good) => acc + good.price, 0);
 	},
-	printTotalPrice(parentEl) {
-		if (this.goods.length === 0) {
-			parentEl.innerText = 'В корзине пусто';
-			return;
+	addCartElement(goods, id) {
+		const good = goods[id];
+		const markup = `
+			<p class="cart__item" data-id="${id}">Тип: ${good.type}, 
+				брэнд: ${good.brand}, 
+				цена: ${good.price} руб.
+				<button class="cart__button">
+					Удалить из корзины
+				</button>
+			</p>
+		`;
+		this._parentEl.insertAdjacentHTML('beforeend', markup);
+	},
+	updateTotalPrice(goods, cartGoodsId) {
+		const priceEl = document.querySelector('.cart__goods-price');
+		const price = cartGoodsId.reduce((acc, id) => {
+			return acc + goods[id].price;
+		}, 0);
+		if (cartGoodsId.length) {
+			priceEl.textContent = `В корзине: ${cartGoodsId.length} товар(-a/-ов) на сумму ${price} рублей`;
+		} else {
+			priceEl.textContent = 'Корзина пуста';
 		}
-		parentEl.insertAdjacentHTML(
-			'beforeend',
-			`<p class="catalog__item catalog__item--busket">В корзине: ${
-				this.goods.length
-			} товар(-a/-ов) на сумму ${this.totalPrice()} рублей</p>`
-		);
 	},
-	addProduct(parentEl) {
-		const html = this.goods
+	removeProductFromCartHadler(handler) {
+		this._parentEl.addEventListener('click', function (e) {
+			e.preventDefault();
+			const good = e.target.closest('.cart__item');
+			const btn = e.target.closest('.cart__button');
+			if (!btn) return;
+
+			const { id } = good.dataset;
+			good.parentNode.removeChild(good);
+
+			handler(+id);
+		});
+	},
+};
+
+const init = function () {
+	catalogView.fillCatalog(state.goods);
+	catalogView.addProductToCartHadler(addProductToCart);
+	cartView.removeProductFromCartHadler(removeProductFromCart);
+};
+init();
+
+/*const html = this._goods
 			.map(
 				(good) =>
 					`<p class="catalog__item">Тип: ${good.type}, 
@@ -53,11 +146,8 @@ const cart = {
 				`
 			)
 			.join('');
-		parentEl.insertAdjacentHTML('beforeend', html);
-	},
-};
+		parentEl.insertAdjacentHTML('beforeend', html);*/
 
-catalog.fillCatalog(catalogContainer);
 // catalog.printTotalPrice(catalogContainer);
 
 /* //HW_5
@@ -104,16 +194,16 @@ createChessBoard();
 //Task_2-3
 const catalogContainer = document.querySelector('#catalog');
 const catalog = {
-	goods: [
+	_goods: [
 		{ type: 'Boots', brand: 'Ricco', price: 3000 },
 		{ type: 'Boots', brand: 'Nike', price: 6000 },
 		{ type: 'Boots', brand: 'Adidas', price: 5600 },
 	],
 	totalPrice() {
-		return this.goods.reduce((acc, good) => acc + good.price, 0);
+		return this._goods.reduce((acc, good) => acc + good.price, 0);
 	},
 	fillCatalog(parentEl) {
-		const html = this.goods
+		const html = this._goods
 			.map(
 				(good) =>
 					`<p>Тип: ${good.type}, 
@@ -124,14 +214,14 @@ const catalog = {
 		parentEl.insertAdjacentHTML('beforeend', html);
 	},
 	printTotalPrice(parentEl) {
-		if (this.goods.length === 0) {
+		if (this._goods.length === 0) {
 			parentEl.innerText = 'В корзине пусто';
 			return;
 		}
 		parentEl.insertAdjacentHTML(
 			'beforeend',
 			`<p>В корзине: ${
-				this.goods.length
+				this._goods.length
 			} товаров на сумму ${this.totalPrice()} рублей</p>`
 		);
 	},
@@ -163,13 +253,13 @@ nums.forEach((num) => {
 
 //Task 2
 const catalog = {
-	goods: [
+	_goods: [
 		{ type: 'Boots', brand: 'Ricco', price: 3000 },
 		{ type: 'Boots', brand: 'Nike', price: 6000 },
 		{ type: 'Boots', brand: 'Adidas', price: 5600 },
 	],
 	totalPrice() {
-		return this.goods.reduce((acc, good) => acc + good.price, 0);
+		return this._goods.reduce((acc, good) => acc + good.price, 0);
 	},
 };
 
@@ -232,17 +322,17 @@ while (i <= 100) {
 console.log('Task 1', primeNums);
 
 //Task_2-3
-const goodsBasket = [
+const _goodsBasket = [
 	{ type: 'Boots', brand: 'Ricco', price: 3000 },
 	{ type: 'Boots', brand: 'Nike', price: 6000 },
 	{ type: 'Boots', brand: 'Adidas', price: 5600 },
 ];
 
-const countBasketPrice = (goods) => {
-	return goods.reduce((acc, good) => acc + good.price, 0);
+const countBasketPrice = (_goods) => {
+	return _goods.reduce((acc, good) => acc + good.price, 0);
 };
 
-console.log('Task 2-3', countBasketPrice(goodsBasket));
+console.log('Task 2-3', countBasketPrice(_goodsBasket));
 
 //Task_4
 console.log('Task 4');

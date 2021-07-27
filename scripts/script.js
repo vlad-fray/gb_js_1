@@ -1,5 +1,66 @@
 'use strict';
-//HW_5
+//HW_6
+//Task_1
+const catalogContainer = document.querySelector('.catalog');
+const cartContainer = document.querySelector('.cart');
+
+const catalog = {
+	goods: [
+		{ type: 'Boots', brand: 'Ricco', price: 3000 },
+		{ type: 'Boots', brand: 'Nike', price: 6000 },
+		{ type: 'Boots', brand: 'Adidas', price: 5600 },
+	],
+	fillCatalog(parentEl) {
+		const html = this.goods
+			.map(
+				(good) =>
+					`<p class="catalog__item">Тип: ${good.type}, 
+				брэнд: ${good.brand}, 
+				цена: ${good.price} руб.
+				<button class="catalog__button">Добавить в корзину</button></p>
+				`
+			)
+			.join('');
+		parentEl.insertAdjacentHTML('beforeend', html);
+	},
+};
+
+const cart = {
+	goods: [],
+	totalPrice() {
+		return this.goods.reduce((acc, good) => acc + good.price, 0);
+	},
+	printTotalPrice(parentEl) {
+		if (this.goods.length === 0) {
+			parentEl.innerText = 'В корзине пусто';
+			return;
+		}
+		parentEl.insertAdjacentHTML(
+			'beforeend',
+			`<p class="catalog__item catalog__item--busket">В корзине: ${
+				this.goods.length
+			} товар(-a/-ов) на сумму ${this.totalPrice()} рублей</p>`
+		);
+	},
+	addProduct(parentEl) {
+		const html = this.goods
+			.map(
+				(good) =>
+					`<p class="catalog__item">Тип: ${good.type}, 
+				брэнд: ${good.brand}, 
+				цена: ${good.price} руб.
+				<button class="catalog__button">Удалить из корзины</button></p>
+				`
+			)
+			.join('');
+		parentEl.insertAdjacentHTML('beforeend', html);
+	},
+};
+
+catalog.fillCatalog(catalogContainer);
+// catalog.printTotalPrice(catalogContainer);
+
+/* //HW_5
 //Task_1
 const chess = document.querySelector('#chess');
 
@@ -42,7 +103,7 @@ createChessBoard();
 
 //Task_2-3
 const catalogContainer = document.querySelector('#catalog');
-const cart = {
+const catalog = {
 	goods: [
 		{ type: 'Boots', brand: 'Ricco', price: 3000 },
 		{ type: 'Boots', brand: 'Nike', price: 6000 },
@@ -51,7 +112,7 @@ const cart = {
 	totalPrice() {
 		return this.goods.reduce((acc, good) => acc + good.price, 0);
 	},
-	printGoods(parentEl) {
+	fillCatalog(parentEl) {
 		const html = this.goods
 			.map(
 				(good) =>
@@ -76,8 +137,8 @@ const cart = {
 	},
 };
 
-cart.printGoods(catalogContainer);
-cart.printTotalPrice(catalogContainer);
+catalog.fillCatalog(catalogContainer);
+catalog.printTotalPrice(catalogContainer); */
 
 /* //HW_4
 //Task 1
@@ -101,7 +162,7 @@ nums.forEach((num) => {
 });
 
 //Task 2
-const cart = {
+const catalog = {
 	goods: [
 		{ type: 'Boots', brand: 'Ricco', price: 3000 },
 		{ type: 'Boots', brand: 'Nike', price: 6000 },
@@ -112,7 +173,7 @@ const cart = {
 	},
 };
 
-console.log('Task 2, full price of busket: ', cart.totalPrice());
+console.log('Task 2, full price of busket: ', catalog.totalPrice());
 
 //Task 3
 console.log('Taks 3');

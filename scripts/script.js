@@ -87,9 +87,6 @@ const catalogView = {
 const cartView = {
 	_parentEl: document.querySelector('.cart__goods'),
 	_priceEl: document.querySelector('.cart__goods-price'),
-	totalPrice() {
-		return this._goods.reduce((acc, good) => acc + good.price, 0);
-	},
 	addCartElement(goods, id) {
 		const good = goods[id];
 		const markup = `

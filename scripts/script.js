@@ -1,5 +1,85 @@
 'use strict';
-//HW_4
+//HW_5
+//Task_1
+const chess = document.querySelector('#chess');
+
+const createChessBoard = function () {
+	const chessContainer = document.createElement('div');
+	Object.assign(chessContainer.style, {
+		display: 'grid',
+		gridTemplateColumns: 'repeat(9, 1fr)',
+		gridTemplateRows: 'repeat(9, 1fr)',
+		margin: '0 auto',
+		width: '360px',
+		minHeight: '100px',
+		content: '',
+	});
+	chess.appendChild(chessContainer);
+
+	const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+	for (let row = 0; row < 9; row++) {
+		for (let col = 0; col < 9; col++) {
+			const chessSquareArea = document.createElement('div');
+			Object.assign(chessSquareArea.style, {
+				height: '40px',
+				width: '40px',
+				boxSizing: 'border-box',
+				textAlign: 'center',
+			});
+			if (row === 0 && col > 0)
+				chessSquareArea.innerText = `${letters[col - 1]}`;
+			else if (col === 0 && row > 0)
+				chessSquareArea.innerText = `${row}`;
+			else if ((col + row) % 2 === 1)
+				chessSquareArea.style.backgroundColor = 'black';
+			else if (col + row !== 0)
+				chessSquareArea.style.border = '1px solid black';
+			chessContainer.appendChild(chessSquareArea);
+		}
+	}
+};
+createChessBoard();
+
+//Task_2-3
+const catalogContainer = document.querySelector('#catalog');
+const cart = {
+	goods: [
+		{ type: 'Boots', brand: 'Ricco', price: 3000 },
+		{ type: 'Boots', brand: 'Nike', price: 6000 },
+		{ type: 'Boots', brand: 'Adidas', price: 5600 },
+	],
+	totalPrice() {
+		return this.goods.reduce((acc, good) => acc + good.price, 0);
+	},
+	printGoods(parentEl) {
+		const html = this.goods
+			.map(
+				(good) =>
+					`<p>Тип: ${good.type}, 
+				брэнд: ${good.brand}, 
+				цена: ${good.price} руб.</p>`
+			)
+			.join('');
+		parentEl.insertAdjacentHTML('beforeend', html);
+	},
+	printTotalPrice(parentEl) {
+		if (this.goods.length === 0) {
+			parentEl.innerText = 'В корзине пусто';
+			return;
+		}
+		parentEl.insertAdjacentHTML(
+			'beforeend',
+			`<p>В корзине: ${
+				this.goods.length
+			} товаров на сумму ${this.totalPrice()} рублей</p>`
+		);
+	},
+};
+
+cart.printGoods(catalogContainer);
+cart.printTotalPrice(catalogContainer);
+
+/* //HW_4
 //Task 1
 console.log('Task 1');
 const nums = [13, -5, 5.4, 0, 500, 1015, 999];
@@ -72,7 +152,7 @@ console.log(
 	'Catalog Good',
 	standartGood.goodInfo,
 	`with ${catalogGood.checkDiscount()}% discount`
-);
+); */
 
 /* //HW_3
 //Task_1
